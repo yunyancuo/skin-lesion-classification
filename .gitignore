@@ -11,3 +11,9 @@ Thumbs.db
 
 # 远程运维脚本（含服务器凭据，勿提交）
 .remote/
+
+# 报告构建中间产物
+node_modules/
+report_build/pages*/
+report_build/*.docx
+report_build/*.pdf
