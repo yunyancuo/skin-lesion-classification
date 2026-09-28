@@ -17,3 +17,4 @@ node_modules/
 report_build/pages*/
 report_build/*.docx
 report_build/*.pdf
+video_build/frames/
