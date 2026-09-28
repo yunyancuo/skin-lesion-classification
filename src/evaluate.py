@@ -12,6 +12,7 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
+import cn_font  # noqa: F401  注册中文字体
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -86,9 +87,9 @@ def main():
         for j in range(len(CLASSES)):
             ax.text(j, i, f"{cm[i, j]:.2f}", ha="center", va="center",
                     color="white" if cm[i, j] > 0.5 else "black", fontsize=8)
-    ax.set_xlabel("predicted")
-    ax.set_ylabel("true")
-    ax.set_title(f"Confusion matrix (row-normalized), balanced acc {bacc:.3f}")
+    ax.set_xlabel("预测类别")
+    ax.set_ylabel("真实类别")
+    ax.set_title(f"混淆矩阵（行归一化），平衡准确率 {bacc:.3f}")
     fig.colorbar(im, shrink=0.8)
     fig.tight_layout()
     fig.savefig(save_dir / "confusion_matrix.png", dpi=150)

@@ -14,6 +14,7 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
+import cn_font  # noqa: F401  注册中文字体
 import matplotlib.pyplot as plt
 import numpy as np
 import torch

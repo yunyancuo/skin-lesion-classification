@@ -1,4 +1,4 @@
-"""EDA：类别分布图 + 样例图网格（报告用）。"""
+"""EDA：类别分布图 + 样例图网格（报告用，中文标签）。"""
 import argparse
 import csv
 from collections import Counter
@@ -7,13 +7,14 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
+import cn_font  # noqa: F401  注册中文字体
 import matplotlib.pyplot as plt
 
 from dataset import HAMDataset, CLASSES, load_bgr
 
-FULL_NAMES = {
-    "akiec": "actinic keratosis", "bcc": "basal cell carcinoma", "bkl": "benign keratosis",
-    "df": "dermatofibroma", "mel": "melanoma", "nv": "melanocytic nevus", "vasc": "vascular lesion",
+CN_NAMES = {
+    "akiec": "光化性角化病", "bcc": "基底细胞癌", "bkl": "良性角化病",
+    "df": "皮肤纤维瘤", "mel": "黑色素瘤", "nv": "黑色素细胞痣", "vasc": "血管性病损",
 }
 
 
@@ -29,14 +30,17 @@ def main():
         rows = list(csv.DictReader(f))
     counts = Counter(r["dx"] for r in rows)
 
-    plt.figure(figsize=(7, 4))
+    plt.figure(figsize=(7.5, 4.5))
     xs = range(len(CLASSES))
-    plt.bar(xs, [counts[c] for c in CLASSES], color="#4c72b0")
+    bars = plt.bar(xs, [counts[c] for c in CLASSES], color="#4c72b0")
     for i, c in enumerate(CLASSES):
-        plt.text(i, counts[c] + 60, f"{counts[c]}\n({counts[c]/len(rows)*100:.1f}%)", ha="center", fontsize=8)
-    plt.xticks(list(xs), [f"{c}\n{FULL_NAMES[c]}" for c in CLASSES], fontsize=8)
-    plt.ylabel("image count")
-    plt.title("HAM10000 class distribution (10015 images, 7 classes)")
+        # 单行标注，柱顶预留 25% 高度避免与相邻标注相碰
+        plt.text(i, counts[c] + counts["nv"] * 0.03,
+                 f"{counts[c]}（{counts[c]/len(rows)*100:.1f}%）", ha="center", fontsize=8.5)
+    plt.xticks(list(xs), [f"{c}\n{CN_NAMES[c]}" for c in CLASSES], fontsize=9)
+    plt.ylim(0, counts["nv"] * 1.22)
+    plt.ylabel("图像数（张）")
+    plt.title(f"HAM10000 类别分布（共 {len(rows)} 张，7 类）")
     plt.tight_layout()
     plt.savefig(out / "class_distribution.png", dpi=150)
     print(f"saved {out / 'class_distribution.png'}")
@@ -56,9 +60,9 @@ def main():
         img = load_bgr(ds.files[i])[:, :, ::-1]
         ax.imshow(img)
         l = ds.labels[i]
-        ax.set_title(f"{CLASSES[l]}: {FULL_NAMES[CLASSES[l]]}", fontsize=9)
+        ax.set_title(f"{CLASSES[l]}：{CN_NAMES[CLASSES[l]]}", fontsize=9)
         ax.axis("off")
-    fig.suptitle("One example per class")
+    fig.suptitle("每类一张样例")
     fig.tight_layout()
     fig.savefig(out / "class_examples.png", dpi=150)
     print(f"saved {out / 'class_examples.png'}")

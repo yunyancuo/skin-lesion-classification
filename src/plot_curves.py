@@ -10,6 +10,7 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
+import cn_font  # noqa: F401  注册中文字体
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -30,17 +31,17 @@ def main():
     for log, name in zip(args.logs, args.names):
         ep, tl, ta, vl, va = read_log(log)
         axes[0].plot(ep, tl, label=name)
-        axes[0].plot(ep, vl, label=name + " (val)", linestyle="--", alpha=0.6)
+        axes[0].plot(ep, vl, label=name + "（验证）", linestyle="--", alpha=0.6)
         axes[1].plot(ep, ta, label=name)
-        axes[1].plot(ep, va, label=name + " (val)", linestyle="--", alpha=0.6)
-    axes[0].set_xlabel("epoch")
-    axes[0].set_ylabel("cross-entropy loss")
-    axes[0].set_title("Loss")
+        axes[1].plot(ep, va, label=name + "（验证）", linestyle="--", alpha=0.6)
+    axes[0].set_xlabel("训练轮次")
+    axes[0].set_ylabel("交叉熵损失")
+    axes[0].set_title("损失曲线")
     axes[0].legend(fontsize=8)
     axes[0].grid(alpha=0.3)
-    axes[1].set_xlabel("epoch")
-    axes[1].set_ylabel("accuracy")
-    axes[1].set_title("Accuracy (overall)")
+    axes[1].set_xlabel("训练轮次")
+    axes[1].set_ylabel("准确率")
+    axes[1].set_title("准确率曲线")
     axes[1].legend(fontsize=8)
     axes[1].grid(alpha=0.3)
     fig.tight_layout()
