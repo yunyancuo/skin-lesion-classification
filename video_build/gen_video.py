@@ -4,9 +4,9 @@
 服务器上 evaluate.py 的真实输出（终端打字动画）。
 用法：python video_build/gen_video.py  → 输出 HAM10000演示视频.mp4
 """
-import os
 import subprocess
 import sys
+import warnings as _w
 from pathlib import Path
 
 import matplotlib
@@ -23,7 +23,6 @@ FRAMES.mkdir(exist_ok=True)
 plt.rcParams["font.sans-serif"] = ["SimHei", "Microsoft YaHei"]
 plt.rcParams["axes.unicode_minus"] = False
 plt.rcParams["font.monospace"] = ["Consolas", "SimHei"]
-import warnings as _w
 _w.filterwarnings("ignore")
 
 BG = "#162235"      # 深海蓝（与报告封面同系）
@@ -70,7 +69,7 @@ def image_slide(title, img_path, caption=None, dur=8):
         ax = fig.add_axes([0.07, 0.13, 0.86 * min(1, (0.72 * 12.8 / 7.2) / (w / h)), 0.72])
         ax.imshow(im)
         ax.axis("off")
-    except Exception as e:
+    except Exception:
         fig.text(0.5, 0.5, f"[图片缺失 {img_path}]", color=GREY, ha="center")
     if caption:
         fig.text(0.5, 0.05, caption, fontsize=15, color=GREY, ha="center")
@@ -102,7 +101,7 @@ def table_slide(title, header, rows, dur=9, highlight_rows=(), note=None, fs=17)
                     cellLoc="center", bbox=[0.10, 0.22, 0.80, 0.56])
     tbl.auto_set_font_size(False)
     tbl.set_fontsize(fs)
-    for (r, c), cell in tbl.get_celld().items():
+    for (r, _c), cell in tbl.get_celld().items():
         cell.set_edgecolor("#3A5068")
         if r == 0:
             cell.set_facecolor("#1B6B7A")
