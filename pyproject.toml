@@ -1,0 +1,43 @@
+[project]
+name = "skin-lesion-classification"
+version = "0.1.0"
+description = "基于皮肤镜图像的 HAM10000 皮肤病变七分类流水线（病灶级防泄漏划分、迁移学习与不平衡采样）"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = []
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "cn_font",
+    "dataset",
+    "eda",
+    "evaluate",
+    "make_test_results",
+    "models",
+    "parquet_extract",
+    "plot_curves",
+    "prepare",
+    "train",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# matplotlib.use("Agg") 必须在导入 pyplot 和 cn_font 之前执行
+"src/eda.py" = ["E402"]
+"src/evaluate.py" = ["E402"]
+"src/make_test_results.py" = ["E402"]
+"src/plot_curves.py" = ["E402"]
+# 交付视频/报告的一次性构建脚本保留原始中文文案长行
+"video_build/gen_video.py" = ["E402", "E501"]
+"report_build/patch_footers.py" = ["B007", "B023"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
